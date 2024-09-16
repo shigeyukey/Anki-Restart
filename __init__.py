@@ -201,6 +201,7 @@ def restart_anki(toggle_Shift=False):
         time.sleep(0.5)
         mw.close()
 
+
     except Exception as e:
         # 実行ﾌｧｲﾙが見つからない場合
         if config["errorAnimationEnable"]:
