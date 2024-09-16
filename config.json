@@ -1,0 +1,21 @@
+{
+    "executable": "C:\\Users\\username\\AppData\\Local\\Programs\\Anki\\anki.exe",
+    "shiftRestart": false,
+    "console_mode": false,
+    "Restart_Shift_enabled": false,
+    "AutoRestart_AfterSafeMode": false,
+    "sound effect": true,
+    "errorAnimationEnable":true,
+    "autoRestartAfterUpdatingAddons":true,
+    "user_auto_Sync": null,
+
+    "restart_shortcut":"Ctrl+Shift+R",
+    "custom_excutable":false,
+    "custom_path":"",
+    "direct_mode":false,
+
+    "custom_base_folder":false,
+    "base_folder_path":"",
+
+    "menu_icon_enabled":true
+}
