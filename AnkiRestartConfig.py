@@ -1,6 +1,6 @@
 
 from aqt import (QApplication, QDialog, QFont, QFont, QFrame, QFrame, QHBoxLayout, QKeySequence,
-    QLineEdit, QPainter, QPainterPath, QRectF, QScrollArea, QTabWidget, QWidget,Qt)
+    QLineEdit, QPainter, QPainterPath, QRectF, QScrollArea, QSizePolicy, QTabWidget, QWidget,Qt)
 from aqt import QVBoxLayout, QLabel, QPushButton
 from aqt import mw
 from os.path import join, dirname
@@ -11,6 +11,8 @@ from aqt import QCheckBox
 import platform
 from .config import listOfSupportedPatrons as CreditData
 from .config.endroll import EndrollWidget
+from .shige_addons import add_shige_addons_tab
+from .shige_tools.open_shige_addons_wiki import WikiQLabel
 
 TOGGLE_PRINT = False
 THE_ADDON_NAME = "AnkiRestart by Shige"
@@ -19,7 +21,12 @@ BUTTON_WIDTH = 95
 SET_LINE_EDID_WIDTH = 400
 MAX_LABEL_WIDTH = 100
 
-SET_SCALEDTOWIDTH = 400
+# SET_SCALEDTOWIDTH = 400
+SET_SCALEDTOWIDTH = 500
+
+
+# PATREON_LABEL_WIDTH = 500
+WIDGET_HEIGHT = 550
 
 def toggle_print(printtext):
     if TOGGLE_PRINT:
@@ -29,7 +36,7 @@ def toggle_print(printtext):
 class SetFontViewer(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setFixedHeight(400)
+        # self.setFixedHeight(400)
 
         config = mw.addonManager.getConfig(__name__)
         self.Restart_Shift_enabled = config["Restart_Shift_enabled"]
@@ -49,6 +56,8 @@ class SetFontViewer(QDialog):
         self.base_folder_path = config["base_folder_path"]
 
         self.menu_icon_enabled = config["menu_icon_enabled"]
+
+        self.disable_auto_sync_when_restarting = config.get("disable_auto_sync_when_restarting", True)
 
         # Set window icon
         addon_path = dirname(__file__)
@@ -88,13 +97,33 @@ class SetFontViewer(QDialog):
         button2.clicked.connect(self.hide)
         button2.setFixedWidth(BUTTON_WIDTH)
 
-        button3 = QPushButton('RateThis')
+        button3 = QPushButton('👍️RateThis')
         button3.clicked.connect(self.open_rate_this_Link)
-        button3.setFixedWidth(BUTTON_WIDTH)
+        # button3.setFixedWidth(BUTTON_WIDTH)
+        button3.setStyleSheet("QPushButton { padding: 2px; }")
+        button3.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        button4 = QPushButton('Help')
-        button4.clicked.connect(self.open_help_Link)
-        button4.setFixedWidth(BUTTON_WIDTH)
+
+        button4 = QPushButton('🚨Report')
+        # button4.clicked.connect(self.open_help_Link)
+        button4.clicked.connect(
+            lambda : openLink("https://shigeyukey.github.io/shige-addons-wiki/ankirestart.html#report-problems-or-requests"))
+        # button4.setFixedWidth(BUTTON_WIDTH)
+        button4.setStyleSheet("QPushButton { padding: 2px; }")
+        button4.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        button5 = QPushButton('💖Patreon')
+        button5.clicked.connect(self.open_patreon_Link)
+        # button5.setFixedWidth(BUTTON_WIDTH)
+        button5.setStyleSheet("QPushButton { padding: 2px; }")
+        button5.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        button6 = QPushButton('📖Wiki')
+        button6.clicked.connect(lambda: openLink("https://shigeyukey.github.io/shige-addons-wiki/ankirestart.html"))
+        # button5.setFixedWidth(BUTTON_WIDTH)
+        button6.setStyleSheet("QPushButton { padding: 2px; }")
+        button6.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
 
         # ｳｨﾝﾄﾞｳにQFontComboBoxとQLabelとQPushButtonを追加
         layout = QVBoxLayout()
@@ -181,6 +210,14 @@ Mac/Linux : /path/to/AnkiDataFolder
             "Show icons on menubar","menu_icon_enabled"
         )
 
+        self.disable_auto_sync_when_restarting_label = self.create_checkbox(
+            "Disable auto sync when restarting", "disable_auto_sync_when_restarting"
+        )
+
+
+
+
+
         layout.addWidget(self.patreon_label)
 
         # -----------------------------------------------------
@@ -193,9 +230,15 @@ Mac/Linux : /path/to/AnkiDataFolder
         layout_one = QVBoxLayout()
         tab_one = QWidget()
 
+        layout_one.addWidget(
+            WikiQLabel(f"<b>[ Option ]</b>",
+            "https://shigeyukey.github.io/shige-addons-wiki/ankirestart.html#option-tab"))
+
         layout_one.addWidget(self.menu_icon_enabled_label)
         layout_one.addWidget(self.autoRestartAfterUpdatingAddonsOn)
         layout_one.addLayout(self.restart_shortcut_label)
+        layout_one.addWidget(self.disable_auto_sync_when_restarting_label)
+
 
         layout_one.addStretch(1)
         tab_one.setLayout(layout_one)
@@ -203,6 +246,11 @@ Mac/Linux : /path/to/AnkiDataFolder
         # ------------------------------------------------------
         tab_two = QWidget()
         layout_two = QVBoxLayout()
+
+
+        layout_two.addWidget(
+            WikiQLabel(f"<b>[ Develop ]</b>",
+            "https://shigeyukey.github.io/shige-addons-wiki/ankirestart.html#develop-tab"))
 
         layout_two.addWidget(self.restartShiftOn)
         layout_two.addWidget(self.AutoRestart_AfterSafeModeOn)
@@ -221,6 +269,11 @@ Mac/Linux : /path/to/AnkiDataFolder
         tab_three = QWidget()
         layout_three = QVBoxLayout()
 
+        layout_three.addWidget(
+            WikiQLabel(f"<b>[ Sound effect ]</b>",
+            "https://shigeyukey.github.io/shige-addons-wiki/ankirestart.html#sound-effect-tab"))
+
+
         layout_three.addWidget(self.soundeffectOn)
         layout_three.addWidget(self.errorAnimationEnableOn)
 
@@ -230,6 +283,11 @@ Mac/Linux : /path/to/AnkiDataFolder
         # ------------------------------------------------------
         tab_four = QWidget()
         layout_four = QVBoxLayout()
+
+        layout_four.addWidget(
+            WikiQLabel(f"<b>[ Custom ]</b>",
+            "https://shigeyukey.github.io/shige-addons-wiki/ankirestart.html#custom-tab"))
+
 
         layout_four.addWidget(self.custom_excutable_label)
         layout_four.addLayout(self.custom_path_label)
@@ -248,10 +306,10 @@ Mac/Linux : /path/to/AnkiDataFolder
         credit_layout = QVBoxLayout()
         credit_data_attributes = [
                                 'credits',
-                                'caractor',
-                                'sound',
-                                'addons',
-                                'budle',
+                                # 'caractor',
+                                # 'sound',
+                                # 'addons',
+                                # 'budle',
                                 'patreon',
                                 'thankYou',
                                 ]
@@ -280,21 +338,31 @@ Mac/Linux : /path/to/AnkiDataFolder
         the_tab.addTab(tab_three,"sound")
         the_tab.addTab(tab_four,"custom")
         the_tab.addTab(scroll_area,"credit")
+        add_shige_addons_tab(self, the_tab)
         layout.addWidget(the_tab)
         # --- ﾎﾞﾀﾝの設定 --------------------------------------
 
         button_layout = QHBoxLayout()
         button_layout.addWidget(button)
         button_layout.addWidget(button2)
-        button_layout.addWidget(button3)
+        button_layout.addWidget(button6)
         button_layout.addWidget(button4)
-        
-        
+        button_layout.addWidget(button3)
+        button_layout.addWidget(button5)
+
         button_layout.addStretch(1)
         layout.addLayout(button_layout)
         self.setLayout(layout)
 
         music_sound_play(r"open")
+
+        self.adjust_self_size()
+
+
+    def adjust_self_size(self):
+        min_size = self.layout().minimumSize()
+        # self.resize(min_size.width(), min_size.height())
+        self.resize(min_size.width(), WIDGET_HEIGHT)
 
     # ------------ patreon label----------------------
     def patreon_label_enterEvent(self, event):
@@ -521,6 +589,7 @@ Mac/Linux : /path/to/AnkiDataFolder
         config["base_folder_path"] = self.base_folder_path
 
         config["menu_icon_enabled"] = self.menu_icon_enabled
+        config["disable_auto_sync_when_restarting"] = self.disable_auto_sync_when_restarting
 
         mw.addonManager.writeConfig(__name__, config)
         toggle_print(config)

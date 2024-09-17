@@ -17,6 +17,11 @@ from anki.hooks import wrap
 from aqt import addons
 from .path_manager import shige_p
 
+from .shige_pop.popup_config import set_gui_hook_change_log
+set_gui_hook_change_log()
+
+
+
 ADD_ON_TITLE = "Anki Restart by Shige"
 Anki_Restart_menu = None
 
@@ -187,20 +192,20 @@ def restart_anki(toggle_Shift=False):
             subprocess.Popen([fname])
 
         # 同期の設定を保存して無効化
-        print("autoSync : ",mw.pm.profile["autoSync"])
-        config["user_auto_Sync"]= mw.pm.profile["autoSync"]
-        mw.pm.profile["autoSync"] = False
-        mw.addonManager.writeConfig(__name__, config)
-        print("user_auto_Sync : ",config["user_auto_Sync"])
+        if config.get("disable_auto_sync_when_restarting", True):
+            print("autoSync : ",mw.pm.profile["autoSync"])
+            config["user_auto_Sync"]= mw.pm.profile["autoSync"]
+            mw.pm.profile["autoSync"] = False
+            mw.addonManager.writeConfig(__name__, config)
+            print("user_auto_Sync : ",config["user_auto_Sync"])
 
-        autosync =  mw.pm.auto_syncing_enabled()
-        print(f"restart sync {autosync}")
+            autosync =  mw.pm.auto_syncing_enabled()
+            print(f"restart sync {autosync}")
 
         music_sound_play("RestartSound") # 効果音
 
         time.sleep(0.5)
         mw.close()
-
 
     except Exception as e:
         # 実行ﾌｧｲﾙが見つからない場合
@@ -242,17 +247,18 @@ def restart_anki_shift(toggle_Shift=True):
 
 def set_autoSync(*args,**kwargs):
     config = mw.addonManager.getConfig(__name__)
-    try:# 同期の設定を復元する
-        if not config["user_auto_Sync"] == None :
-            # 保存した設定を読み込む
-            mw.pm.profile["autoSync"] = config["user_auto_Sync"]
-        # 設定を削除
-        config["user_auto_Sync"] = None
-        mw.addonManager.writeConfig(__name__, config)
-    except Exception as e:
-        # なんかのｴﾗｰ
-        print("user_auto_Sync error",e)
-        raise e
+    if config.get("disable_auto_sync_when_restarting", True):
+        try:# 同期の設定を復元する
+            if not config["user_auto_Sync"] == None :
+                # 保存した設定を読み込む
+                mw.pm.profile["autoSync"] = config["user_auto_Sync"]
+            # 設定を削除
+            config["user_auto_Sync"] = None
+            mw.addonManager.writeConfig(__name__, config)
+        except Exception as e:
+            # なんかのｴﾗｰ
+            print("user_auto_Sync error",e)
+            raise e
 
 
 
@@ -497,7 +503,7 @@ def my_show_log_to_user(parent, log):
             if have_problem:
                 pass # ｴﾗｰがあった場合は何もしない
             else:
-                dialog = ConfirmDialog()
+                dialog = ConfirmDialog(mw)
                 returnValue = dialog.exec()
                 if returnValue == QDialog.DialogCode.Accepted:
                     restart_anki(False)
@@ -505,13 +511,31 @@ def my_show_log_to_user(parent, log):
         d = True
         if d:tooltip("Anki Restart Error : " + str(e))
         pass
-# ﾌｯｸを登録する
+
+
+# mw.pm.meta["last_addon_update_check"] = 1722384000
+# print("")
+# print("")
+# print("")
+# print(mw.pm.meta["last_addon_update_check"])
+# print("")
+# print("")
+# print("")
+
 
 try:
     addons.show_log_to_user = wrap(addons.show_log_to_user, my_show_log_to_user)
 except Exception as e:
     d = True
     if d:tooltip("Anki Restart Error : " + str(e))
+
+try:
+    from aqt import main
+    main.show_log_to_user = wrap(main.show_log_to_user, my_show_log_to_user)
+except Exception as e:
+    d = True
+    if d:tooltip("Anki Restart Error : " + str(e))
+
 
 
 # def restart_after_addons_update(*args, **kwargs):

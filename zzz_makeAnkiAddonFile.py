@@ -3,7 +3,7 @@ import zipfile
 from datetime import datetime
 
 
-ADDON_NAME ="🟢"
+ADDON_NAME ="Anki Restart"
 
 
 def create_ankiaddon():
