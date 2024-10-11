@@ -495,7 +495,7 @@ for dialog_name, dialog_info in aqt.dialogs._dialogs.items():
 
 
 
-def my_show_log_to_user(parent, log):
+def my_show_log_to_user(parent, log, *args, **kwargs):
     try:
         config = mw.addonManager.getConfig(__name__)
         if config["autoRestartAfterUpdatingAddons"]:
