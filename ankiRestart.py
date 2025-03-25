@@ -27,6 +27,9 @@ chmod +x ankiRestart_linux
 ls -l ankiRestart_linux
 
 """
+# pyinstallerの誤検出について
+# https://github.com/pyinstaller/pyinstaller/blob/develop/.github/ISSUE_TEMPLATE/antivirus.md
+
 # ------------------------------------
 
 if getattr(sys, 'frozen', False):

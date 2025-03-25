@@ -593,3 +593,9 @@ class ConfirmDialog(QDialog):
         self.layout.addLayout(self.buttonBox)
 
 #--------- auto_restart_after_updating_addons ------------
+
+
+
+from .shigeAPI import shigeAPI
+# for my add-on: BreakTimer https://ankiweb.net/shared/info/174058935
+shigeAPI.restart_anki.add(restart_anki)
