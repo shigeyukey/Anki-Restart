@@ -21,6 +21,7 @@ from .shige_pop.popup_config import set_gui_hook_change_log
 set_gui_hook_change_log()
 
 
+
 ADD_ON_TITLE = "Anki Restart by Shige"
 Anki_Restart_menu = None
 
@@ -168,38 +169,27 @@ def restart_anki(toggle_Shift=False):
 
     try:
         global fname
-        # if direct_mode and PLATFROM_SYSTEM == MAC:
-        #     subprocess.Popen([sys_executable], start_new_session=True)
-        # elif direct_mode and PLATFROM_SYSTEM == LINUX:
-        #     subprocess.Popen([sys_executable], start_new_session=True)
-
-        # elif console_mode and PLATFROM_SYSTEM == WINDOWS:
-        #     # ｺﾝｿｰﾙ有り(Windowsのみ)
-        #     subprocess.Popen([fname_console])
-        # else: # ｺﾝｿｰﾙ無し
-        #     mode = os.stat(fname).st_mode
-        #     # 実行可能な場合に実行権限を与える
-        #     if not mode & stat.S_IXUSR:
-        #         os.chmod(fname, mode | stat.S_IXUSR)
-        #     subprocess.Popen([fname])
-
         if direct_mode and PLATFROM_SYSTEM == MAC:
-            proc = subprocess.Popen([sys_executable], start_new_session=True)
-            print(f"subprocess started: pid={proc.pid}")
+            subprocess.Popen([sys_executable], start_new_session=True)
         elif direct_mode and PLATFROM_SYSTEM == LINUX:
-            proc = subprocess.Popen([sys_executable], start_new_session=True)
-            print(f"subprocess started: pid={proc.pid}")
+            subprocess.Popen([sys_executable], start_new_session=True)
 
         elif console_mode and PLATFROM_SYSTEM == WINDOWS:
-            proc = subprocess.Popen([fname_console])
-            print(f"subprocess started: pid={proc.pid}")
+            # ｺﾝｿｰﾙ有り(Windowsのみ)
+            subprocess.Popen([fname_console])
         else: # ｺﾝｿｰﾙ無し
+            # ﾌｧｲﾙのﾓｰﾄﾞを取得する
+            # if PLATFROM_SYSTEM == MAC:
+            #     fname = os.path.join(fname,"Contents","MacOS","ankiRestart_mac")
+            #     mode = os.stat(fname).st_mode
+            #     if not mode & stat.S_IXUSR:
+            #         os.chmod(fname, mode | stat.S_IXUSR)
+            # else:
             mode = os.stat(fname).st_mode
+            # 実行可能な場合に実行権限を与える
             if not mode & stat.S_IXUSR:
                 os.chmod(fname, mode | stat.S_IXUSR)
-            proc = subprocess.Popen([fname])
-            print(f"subprocess started: pid={proc.pid}")
-
+            subprocess.Popen([fname])
 
         # 同期の設定を保存して無効化
         if config.get("disable_auto_sync_when_restarting", True):
