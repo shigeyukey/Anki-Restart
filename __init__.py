@@ -15,10 +15,13 @@ import zipfile
 from aqt.utils import tooltip
 from anki.hooks import wrap
 from aqt import addons
+
 from .path_manager import shige_p
+from .shige_tools.ajt_utils_find_executable import find_executable
 
 from .shige_pop.popup_config import set_gui_hook_change_log
 set_gui_hook_change_log()
+
 
 
 ADD_ON_TITLE = "Anki Restart by Shige"
@@ -157,7 +160,11 @@ def restart_anki(toggle_Shift=False):
     # mac_zip_extract()
 
     config = mw.addonManager.getConfig(__name__)
-    sys_executable =  sys.executable
+
+    sys_executable =  find_executable("anki") # ﾌﾟﾛｸﾞﾗﾑの実行ﾌｧｲﾙを探す
+    if not sys_executable:
+        sys_executable = sys.executable
+
     config['executable'] = sys_executable
     config["shiftRestart"] = toggle_Shift
     mw.addonManager.writeConfig(__name__, config)

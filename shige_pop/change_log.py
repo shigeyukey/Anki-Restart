@@ -2,10 +2,9 @@
 
 
 OLD_CHANGE_LOG = """
-2025-05-15
-A function added to call AnkiRestart from BreakTimer.(prototype)
-BreakTimer https://ankiweb.net/shared/info/174058935
-----
+2024-10-11
+[1] 🐛Fixed bug
+    - Fixed an auto-restart bug that caused an error when updating add-ons on Anki24.10beta.
 
 2024-09-17
 [1] Enhanced

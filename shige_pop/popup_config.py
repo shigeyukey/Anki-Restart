@@ -11,9 +11,9 @@ from .change_log import OLD_CHANGE_LOG #🟢
 from .patreons_list import PATRONS_LIST
 
 CHANGE_LOG = "is_change_log"
-CHANGE_LOG_DAY = "2024-10-11c" #🟢
+# CHANGE_LOG_DAY = "2024-10-11c" #🟢
+CHANGE_LOG_DAY = "2025-06-22a" #🟢
 
-#🟢
 
 #🟢 AnkiWebのﾊﾟﾄﾛﾝのﾘｽﾄを更新
 # https://ankiweb.net/shared/info/🟢
@@ -61,9 +61,14 @@ POPUP_PNG = r"popup_shige.png"
 
 #🟢
 NEW_FEATURE = """
-2024-10-11
-[1] 🐛Fixed bug
-    - Fixed an auto-restart bug that caused an error when updating add-ons on Anki24.10beta.
+2025-06-22
+[1] Bug fixed (added support for latest Anki)
+    - Added workaround for the problem of not restarting with the latest Anki25.06.
+
+2025-05-15
+[ Cooperative function ]
+A function added to call AnkiRestart from BreakTimer.
+    - addon: BreakTimer https://ankiweb.net/shared/info/174058935
 """
 
 UPDATE_TEXT = "I updated this Add-on."
@@ -71,23 +76,17 @@ UPDATE_TEXT = "I updated this Add-on."
 
 
 
-
-
-
+SPECIAL_THANKS ="""\
+[ Patreon ] Special thanks
+Without the support of my Patrons, I would never have been
+able to develop this. Thank you very much!🙏"""
 
 CHANGE_LOG_TEXT = """\
 [ Change log : {addon} ]
-
-Shigeyuki :
-Hello, thank you for using this add-on!😆
-{update_text}
+Shigeyuki: Hi thanks for using this add-on!ඞ {update_text}
 {new_feature}
-When Anki gets a major update add-ons will be broken, \
-so if you like this add-on please support my volunteer development \
-(so far I fixed 50 add-ons and created 37 new ones) \
-by donating on Patreon to get exclusive add-ons. Thanks!
-
-
+---
+I'm looking for supporters for my add-ons development, because I like Anki! So far I fixed and customized 60+ discontinued add-ons and created 30+ new add-ons. If you support my volunteer development you will get 14 add-ons for patrons only and 15 game themes included in AnkiArcade. If you have any ideas or requests feel free to send them to me, thanks! :D
 
 [ Old change log ]
 {old_change_log}
@@ -102,7 +101,6 @@ by donating on Patreon to get exclusive add-ons. Thanks!
             old_change_log = OLD_CHANGE_LOG,
             special_thanks=SPECIAL_THANKS,
             patron=PATRONS_LIST)
-
 
 
 

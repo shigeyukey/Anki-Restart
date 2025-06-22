@@ -2,6 +2,11 @@ import os
 import zipfile
 from datetime import datetime
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from shige_pop.change_log import OLD_CHANGE_LOG
+    from shige_pop.patreons_list import PATRONS_LIST
+    from shige_pop.popup_config import NEW_FEATURE
 
 ADDON_NAME ="Anki Restart"
 
